@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horário Escolar - Escola Dom Pedro II</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .school-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .school-icon:hover {
+            transform: scale(1.05);
+        }
+
+        .school-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .filters-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .filters-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #333;
+            text-align: center;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .filter-select {
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e1e5e9;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .schedule-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .schedule-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #333;
+            text-align: center;
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .schedule-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .schedule-table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #e1e5e9;
+            transition: background-color 0.3s ease;
+        }
+
+        .schedule-table tbody tr:hover {
+            background-color: rgba(102, 126, 234, 0.05);
+        }
+
+        .time-slot {
+            font-weight: 600;
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .subject {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .teacher {
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .empty-slot {
+            color: #ccc;
+            font-style: italic;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+
+            .school-name {
+                font-size: 1.4rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-buttons {
+                flex-direction: column;
+            }
+
+            .schedule-table {
+                font-size: 0.9rem;
+            }
+
+            .schedule-table th,
+            .schedule-table td {
+                padding: 10px 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-section">
+            <div class="school-icon">🏫</div>
+            <h1 class="school-name">Escola Dom Pedro II</h1>
+        </div>
+        <button class="login-btn" onclick="handleLogin()">Entrar</button>
+    </header>
+
+    <div class="container">
+        <section class="filters-section">
+            <h2 class="filters-title">Filtros de Pesquisa</h2>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Turma</label>
+                    <select class="filter-select" id="turma">
+                        <option value="">Selecione a turma</option>
+                        <option value="6A">6º Ano A</option>
+                        <option value="6B">6º Ano B</option>
+                        <option value="7A">7º Ano A</option>
+                        <option value="7B">7º Ano B</option>
+                        <option value="8A">8º Ano A</option>
+                        <option value="8B">8º Ano B</option>
+                        <option value="9A">9º Ano A</option>
+                        <option value="9B">9º Ano B</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Turno</label>
+                    <select class="filter-select" id="turno">
+                        <option value="">Selecione o turno</option>
+                        <option value="manha">Manhã</option>
+                        <option value="tarde">Tarde</option>
+                        <option value="noite">Noite</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Dia da Semana</label>
+                    <select class="filter-select" id="dia">
+                        <option value="">Todos os dias</option>
+                        <option value="segunda">Segunda-feira</option>
+                        <option value="terca">Terça-feira</option>
+                        <option value="quarta">Quarta-feira</option>
+                        <option value="quinta">Quinta-feira</option>
+                        <option value="sexta">Sexta-feira</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Professor</label>
+                    <select class="filter-select" id="professor">
+                        <option value="">Todos os professores</option>
+                        <option value="ana">Prof. Ana Silva</option>
+                        <option value="carlos">Prof. Carlos Santos</option>
+                        <option value="maria">Prof. Maria Oliveira</option>
+                        <option value="joao">Prof. João Costa</option>
+                        <option value="lucia">Prof. Lúcia Ferreira</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="filter-buttons">
+                <button class="btn btn-primary" onclick="applyFilters()">Aplicar Filtros</button>
+                <button class="btn btn-secondary" onclick="clearFilters()">Limpar Filtros</button>
+            </div>
+        </section>
+
+        <section class="schedule-section">
+            <h2 class="schedule-title">Horário Escolar</h2>
+            <div id="schedule-container">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Horário</th>
+                            <th>Segunda</th>
+                            <th>Terça</th>
+                            <th>Quarta</th>
+                            <th>Quinta</th>
+                            <th>Sexta</th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedule-body">
+                        <tr>
+                            <td class="time-slot">07:00 - 07:50</td>
+                            <td class="subject">Matemática<br><span class="teacher">Prof. Ana Silva</span></td>
+                            <td class="subject">Português<br><span class="teacher">Prof. Carlos Santos</span></td>
+                            <td class="subject">História<br><span class="teacher">Prof. Maria Oliveira</span></td>
+                            <td class="subject">Geografia<br><span class="teacher">Prof. João Costa</span></td>
+                            <td class="subject">Ciências<br><span class="teacher">Prof. Lúcia Ferreira</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-slot">07:50 - 08:40</td>
+                            <td class="subject">Matemática<br><span class="teacher">Prof. Ana Silva</span></td>
+                            <td class="subject">Português<br><span class="teacher">Prof. Carlos Santos</span></td>
+                            <td class="subject">História<br><span class="teacher">Prof. Maria Oliveira</span></td>
+                            <td class="subject">Geografia<br><span class="teacher">Prof. João Costa</span></td>
+                            <td class="subject">Ciências<br><span class="teacher">Prof. Lúcia Ferreira</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-slot">08:40 - 09:00</td>
+                            <td colspan="5" class="empty-slot">INTERVALO</td>
+                        </tr>
+                        <tr>
+                            <td class="time-slot">09:00 - 09:50</td>
+                            <td class="subject">Português<br><span class="teacher">Prof. Carlos Santos</span></td>
+                            <td class="subject">Matemática<br><span class="teacher">Prof. Ana Silva</span></td>
+                            <td class="subject">Ciências<br><span class="teacher">Prof. Lúcia Ferreira</span></td>
+                            <td class="subject">História<br><span class="teacher">Prof. Maria Oliveira</span></td>
+                            <td class="subject">Geografia<br><span class="teacher">Prof. João Costa</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-slot">09:50 - 10:40</td>
+                            <td class="subject">Educação Física<br><span class="teacher">Prof. João Costa</span></td>
+                            <td class="subject">Inglês<br><span class="teacher">Prof. Maria Oliveira</span></td>
+                            <td class="subject">Arte<br><span class="teacher">Prof. Lúcia Ferreira</span></td>
+                            <td class="subject">Matemática<br><span class="teacher">Prof. Ana Silva</span></td>
+                            <td class="subject">Português<br><span class="teacher">Prof. Carlos Santos</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-slot">10:40 - 11:30</td>
+                            <td class="subject">Arte<br><span class="teacher">Prof. Lúcia Ferreira</span></td>
+                            <td class="subject">Ciências<br><span class="teacher">Prof. Lúcia Ferreira</span></td>
+                            <td class="subject">Matemática<br><span class="teacher">Prof. Ana Silva</span></td>
+                            <td class="subject">Português<br><span class="teacher">Prof. Carlos Santos</span></td>
+                            <td class="subject">Inglês<br><span class="teacher">Prof. Maria Oliveira</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Dados de exemplo para diferentes turmas e turnos
+        const scheduleData = {
+            '6A': {
+                'manha': [
+                    ['07:00 - 07:50', 'Matemática - Prof. Ana Silva', 'Português - Prof. Carlos Santos', 'História - Prof. Maria Oliveira', 'Geografia - Prof. João Costa', 'Ciências - Prof. Lúcia Ferreira'],
+                    ['07:50 - 08:40', 'Matemática - Prof. Ana Silva', 'Português - Prof. Carlos Santos', 'História - Prof. Maria Oliveira', 'Geografia - Prof. João Costa', 'Ciências - Prof. Lúcia Ferreira'],
+                    ['08:40 - 09:00', 'INTERVALO', 'INTERVALO', 'INTERVALO', 'INTERVALO', 'INTERVALO'],
+                    ['09:00 - 09:50', 'Português - Prof. Carlos Santos', 'Matemática - Prof. Ana Silva', 'Ciências - Prof. Lúcia Ferreira', 'História - Prof. Maria Oliveira', 'Geografia - Prof. João Costa'],
+                    ['09:50 - 10:40', 'Educação Física - Prof. João Costa', 'Inglês - Prof. Maria Oliveira', 'Arte - Prof. Lúcia Ferreira', 'Matemática - Prof. Ana Silva', 'Português - Prof. Carlos Santos'],
+                    ['10:40 - 11:30', 'Arte - Prof. Lúcia Ferreira', 'Ciências - Prof. Lúcia Ferreira', 'Matemática - Prof. Ana Silva', 'Português - Prof. Carlos Santos', 'Inglês - Prof. Maria Oliveira']
+                ]
+            },
+            '7A': {
+                'manha': [
+                    ['07:00 - 07:50', 'Português - Prof. Carlos Santos', 'Matemática - Prof. Ana Silva', 'Ciências - Prof. Lúcia Ferreira', 'História - Prof. Maria Oliveira', 'Geografia - Prof. João Costa'],
+                    ['07:50 - 08:40', 'Matemática - Prof. Ana Silva', 'História - Prof. Maria Oliveira', 'Português - Prof. Carlos Santos', 'Geografia - Prof. João Costa', 'Arte - Prof. Lúcia Ferreira'],
+                    ['08:40 - 09:00', 'INTERVALO', 'INTERVALO', 'INTERVALO', 'INTERVALO', 'INTERVALO'],
+                    ['09:00 - 09:50', 'Ciências - Prof. Lúcia Ferreira', 'Geografia - Prof. João Costa', 'Matemática - Prof. Ana Silva', 'Português - Prof. Carlos Santos', 'História - Prof. Maria Oliveira'],
+                    ['09:50 - 10:40', 'Inglês - Prof. Maria Oliveira', 'Educação Física - Prof. João Costa', 'História - Prof. Maria Oliveira', 'Ciências - Prof. Lúcia Ferreira', 'Matemática - Prof. Ana Silva'],
+                    ['10:40 - 11:30', 'Geografia - Prof. João Costa', 'Arte - Prof. Lúcia Ferreira', 'Inglês - Prof. Maria Oliveira', 'Arte - Prof. Lúcia Ferreira', 'Português - Prof. Carlos Santos']
+                ]
+            }
+        };
+
+        function handleLogin() {
+            alert('Funcionalidade de login será implementada em breve!');
+        }
+
+        function applyFilters() {
+            const turma = document.getElementById('turma').value;
+            const turno = document.getElementById('turno').value;
+            const dia = document.getElementById('dia').value;
+            const professor = document.getElementById('professor').value;
+
+            if (!turma || !turno) {
+                alert('Por favor, selecione pelo menos a turma e o turno para visualizar o horário.');
+                return;
+            }
+
+            const data = scheduleData[turma] && scheduleData[turma][turno];
+            
+            if (!data) {
+                showNoResults();
+                return;
+            }
+
+            updateScheduleTable(data, dia, professor);
+        }
+
+        function updateScheduleTable(data, filterDay, filterTeacher) {
+            const tbody = document.getElementById('schedule-body');
+            tbody.innerHTML = '';
+
+            const days = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
+            const dayNames = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
+            
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                const timeCell = document.createElement('td');
+                timeCell.className = 'time-slot';
+                timeCell.textContent = row[0];
+                tr.appendChild(timeCell);
+
+                for (let i = 1; i <= 5; i++) {
+                    const td = document.createElement('td');
+                    let cellContent = row[i];
+                    
+                    if (cellContent === 'INTERVALO') {
+                        td.className = 'empty-slot';
+                        td.textContent = cellContent;
+                    } else {
+                        const [subject, teacher] = cellContent.split(' - ');
+                        
+                        // Aplicar filtros
+                        let showCell = true;
+                        if (filterDay && days[i-1] !== filterDay) {
+                            showCell = false;
+                        }
+                        if (filterTeacher && !teacher.toLowerCase().includes(filterTeacher)) {
+                            showCell = false;
+                        }
+                        
+                        if (showCell) {
+                            td.className = 'subject';
+                            td.innerHTML = `${subject}<br><span class="teacher">${teacher}</span>`;
+                        } else {
+                            td.className = 'empty-slot';
+                            td.textContent = '-';
+                        }
+                    }
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            });
+        }
+
+        function showNoResults() {
+            const container = document.getElementById('schedule-container');
+            container.innerHTML = '<div class="no-results">Nenhum horário encontrado para os filtros selecionados.</div>';
+        }
+
+        function clearFilters() {
+            document.getElementById('turma').value = '';
+            document.getElementById('turno').value = '';
+            document.getElementById('dia').value = '';
+            document.getElementById('professor').value = '';
+            
+            // Restaurar tabela padrão
+            const container = document.getElementById('schedule-container');
+            container.innerHTML = `
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Horário</th>
+                            <th>Segunda</th>
+                            <th>Terça</th>
+                            <th>Quarta</th>
+                            <th>Quinta</th>
+                            <th>Sexta</th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedule-body">
+                        <tr>
+                            <td class="time-slot">07:00 - 07:50</td>
+                            <td class="subject">Matemática<br><span class="teacher">Prof. Ana Silva</span></td>
+                            <td class="subject">Português<br><span class="teacher">Prof. Carlos Santos</span></td>
+                            <td class="subject">História<br><span class="teacher">Prof. Maria Oliveira</span></td>
+                            <td class="subject">Geografia<br><span class="teacher">Prof. João Costa</span></td>
+                            <td class="subject">Ciências<br><span class="teacher">Prof. Lúcia Ferreira</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-slot">07:50 - 08:40</td>
+                            <td class="subject">Matemática<br><span class="teacher">Prof. Ana Silva</span></td>
+                            <td class="subject">Português<br><span class="teacher">Prof. Carlos Santos</span></td>
+                            <td class="subject">História<br><span class="teacher">Prof. Maria Oliveira</span></td>
+                            <td class="subject">Geografia<br><span class="teacher">Prof. João Costa</span></td>
+                            <td class="subject">Ciências<br><span class="teacher">Prof. Lúcia Ferreira</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-slot">08:40 - 09:00</td>
+                            <td colspan="5" class="empty-slot">INTERVALO</td>
+                        </tr>
+                        <tr>
+                            <td class="time-slot">09:00 - 09:50</td>
+                            <td class="subject">Português<br><span class="teacher">Prof. Carlos Santos</span></td>
+                            <td class="subject">Matemática<br><span class="teacher">Prof. Ana Silva</span></td>
+                            <td class="subject">Ciências<br><span class="teacher">Prof. Lúcia Ferreira</span></td>
+                            <td class="subject">História<br><span class="teacher">Prof. Maria Oliveira</span></td>
+                            <td class="subject">Geografia<br><span class="teacher">Prof. João Costa</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-slot">09:50 - 10:40</td>
+                            <td class="subject">Educação Física<br><span class="teacher">Prof. João Costa</span></td>
+                            <td class="subject">Inglês<br><span class="teacher">Prof. Maria Oliveira</span></td>
+                            <td class="subject">Arte<br><span class="teacher">Prof. Lúcia Ferreira</span></td>
+                            <td class="subject">Matemática<br><span class="teacher">Prof. Ana Silva</span></td>
+                            <td class="subject">Português<br><span class="teacher">Prof. Carlos Santos</span></td>
+                        </tr>
+                        <tr>
+                            <td class="time-slot">10:40 - 11:30</td>
+                            <td class="subject">Arte<br><span class="teacher">Prof. Lúcia Ferreira</span></td>
+                            <td class="subject">Ciências<br><span class="teacher">Prof. Lúcia Ferreira</span></td>
+                            <td class="subject">Matemática<br><span class="teacher">Prof. Ana Silva</span></td>
+                            <td class="subject">Português<br><span class="teacher">Prof. Carlos Santos</span></td>
+                            <td class="subject">Inglês<br><span class="teacher">Prof. Maria Oliveira</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+        }
+    </script>
+</body>
+</html>
